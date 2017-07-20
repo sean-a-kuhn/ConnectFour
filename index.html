@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/styles.css">
+    <title>Connect Four</title>
+</head>
+<body>
+    <div class="container" id="rules">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>CONNECT FOUR</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h2>How To Play</h2>
+                <p>This is a two player game where each player adds a token to a slot while attempting to get four tokens in a row (horizontally, vertically, or diagonally).
+                    The first player to get four tokens in a row is the winner.  Click the drop button to drop a token in the slot.
+                </p>
+            </div>
+        </div>
+      </div>
+
+      <div class="container" id="gamebox">
+
+         <div class="row">
+            <div class="col-md-6 gameDisplay">
+                <p></p>
+            </div>
+         </div>
+
+         <div class="row">
+
+            <!-- Spacer divs -->
+            <div class="col-xs-1"></div>
+            <div class="col-xs-1"></div>
+            <div class="col-xs-2"></div>
+
+            <!-- gameplay info -->
+            <div class="col-xs-2">
+                <h3>Score:</h3>
+                    <p class="playerBlack">Black: 0</p>
+                    <p class="playerRed">Red: 0</p>
+            </div>
+            <div class="col-xs-3">
+                <h4>Current Turn:</h4>
+                    <p id="currentTurn"><h3><b>Black</b></h3></p>
+            </div>
+            <div class="col-xs-1 gridButton">
+                <button class="resetButton">RESET</button>
+            </div>
+
+            <!-- spacer divs -->
+            <div class="col-xs-2"></div>
+            <div class="col-xs-1"></div>
+            <div class="col-xs-1"></div>
+        </div>
+
+         <!-- buttons to drop tokens into grid -->
+         <div class="row" id="drop_buttons">
+            <div class="col-xs-1 gridButton">
+                <button class="buttons" data-button="0">Drop</button>
+            </div>
+            <div class="col-xs-1 gridButton">
+                <button class="buttons" data-button="1">Drop</button>
+            </div>
+            <div class="col-xs-1 gridButton">
+                <button class="buttons" data-button="2">Drop</button>
+            </div>
+            <div class="col-xs-1 gridButton">
+                <button class="buttons" data-button="3">Drop</button>
+            </div>
+            <div class="col-xs-1 gridButton">
+                <button class="buttons" data-button="4">Drop</button>
+            </div>
+            <div class="col-xs-1 gridButton">
+                <button class="buttons" data-button="5">Drop</button>
+            </div>
+            <div class="col-xs-1 gridButton">
+                <button class="buttons" data-button="6">Drop</button>
+            </div>
+        </div>
+    </div>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="script/script2.js"></script>
+</body>
+</html>
