@@ -7,6 +7,18 @@
     justify-content: center;
 }
 
+.welcomebox {
+   background-color:       #0FF;
+}
+
+.playbutton {
+   background-color:       #9F0;
+/*
+   width:                  200px;
+   height:                 100px;
+*/
+}
+
 .gridButton {
     background-color: white;
     width: 75px;
