@@ -86,6 +86,8 @@
 
 /* SAK CSS classes */
 
+.currentTurn {}
+
 .gameboard {
    width:            525px;
    height:           450px;
