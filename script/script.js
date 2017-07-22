@@ -32,7 +32,7 @@ var connectFour = {
 
       // set playerTurn value to var "turn" and convert it to opposite value
       var turn = connectFour.playerTurn;
-      turn = -1*turn;
+      turn = -1 * turn;
 
       // switch playerTurn value, +1 to -1 or -1 to +1
       connectFour.playerTurn = turn;
@@ -65,8 +65,9 @@ var connectFour = {
       connectFour.gameArray[index] = connectFour.playerTurn;
    }, // end function: updateGameArray
 
+   // function to "add token" to game board by changing color of div inside slot
    addToken: function (index) {
-      var tokenId = '#' + index;
+      var tokenId = '#' + index + " div";
       if (connectFour.playerTurn === 1) {
          $(tokenId).css("background-color", "black");
       }
@@ -74,6 +75,72 @@ var connectFour = {
          $(tokenId).css("background-color", "red");
       }
    }, //end function: addToken
+
+   // function to check for a Connect Four
+   checkWin: function(index) {
+
+      if (connectFour.checkHorizontal(index) || connectFour.checkVertical(index) || connectFour.checkDiagUp(index) || connectFour.checkDiagDown(index)) {
+         return true;
+      }
+      else {
+         return false;
+      }
+   }, // end function: checkWin
+
+   // function to check for a horizontal Connect Four based upon index of most recently added token
+   checkHorizontal: function(index) {
+
+      // find row of target index
+      var row = Math.floor(index/7);
+
+      // find range of check indices based on row of target index
+      var startRow = 7 * row;
+      var endRow = startRow + 6;
+
+      // fine tune range by comparing "starRow" and "endRow" values with indices 3 away to left and right of target index
+      var min = Math.max(startRow, index-3);
+      var max = Math.min(index+3, endRow);
+
+      // loop to find sum of 4 consecutive array values, 1+1+1+1 or (-1)+(-1)+(-1)+(-1) wins
+      for (var i = min; i <= max-3; i++) {
+         if (Math.abs(connectFour.gameArray[i] + connectFour.gameArray[i+1] + connectFour.gameArray[i+2] + connectFour.gameArray[i+3]) === 4) {
+            return true;
+         }
+      }
+
+      // if no wins, return false
+      return false;
+   }, // end function: checkHorizontal
+
+   // function to check for vertical Connect Four based upon index of most recently added token
+   checkVertical: function(index, row) {
+
+      // find index of slot at bottom of column by finding index modulo 7(row length)
+      var base = index%7;
+
+      // loop adding 4 vertically consecutive array values, 1+1+1+1 or (-1)+(-1)+(-1)+(-1) wins
+      // loop cycles 3 times because there are only 3 combinations of sets of 4 stacked tokens in 6-row board
+      for (var i = 0; i <= 2; i++) {
+         if (Math.abs(connectFour.gameArray[base] + connectFour.gameArray[base+7] + connectFour.gameArray[base+14] + connectFour.gameArray[base+21]) === 4) {
+            return true;
+         }
+         // if no wins, use token one row up as base
+         else {
+            base = base+7;
+         }
+      }
+
+      // if no wins, return false
+      return false;
+   },
+
+   checkDiagUp: function(index, row) {
+      return false;
+   },
+
+   checkDiagDown: function(index, row){
+      return false;
+   },
 
    // function to create gameboard
    buildBoard: function () {
@@ -123,7 +190,19 @@ var connectFour = {
       else {
          connectFour.updateGameArray(index);
          connectFour.addToken(index);
-         connectFour.switchTurn();
+
+         if (connectFour.checkWin(index)) {
+            // alert winner and ask for another round
+            if(connectFour.playerTurn === 1) {
+               alert("Black wins!");
+            }
+            else {
+               alert("Red wins!");
+            }
+         }
+         else {
+            connectFour.switchTurn();
+         }
       }
    } // end function: dropToken
 }
