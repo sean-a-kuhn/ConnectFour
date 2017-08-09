@@ -294,7 +294,7 @@ var connectFour = {
       connectFour.replayBoxToGameBox();
       connectFour.buildBoard();
    }
-}
+};
 
 $(".playButton").click(connectFour.resetGame);
 $(".replayButton").click(connectFour.resetGame);
