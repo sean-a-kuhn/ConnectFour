@@ -20,10 +20,10 @@ var connectFour = {
 
       // change '.currentTurn' html to indicate which player's turn
       if (connectFour.playerTurn === 1) {
-         $('.currentTurn').html('<h3 style="color:black;font-weight:bold;">Black</h3>');
+         $(".currentTurn").html('<h3 style="color:black;font-weight:bold;">Black</h3>');
       }
       else {
-         $('.currentTurn').html('<h3 style="color: red;font-weight:bold;">Red</h3>');
+         $(".currentTurn").html('<h3 style="color: red;font-weight:bold;">Red</h3>');
       }
    }, // end function: alertTurn
 
@@ -79,7 +79,7 @@ var connectFour = {
    // function to check for a Connect Four
    checkWin: function(index) {
 
-      if (connectFour.checkHorizontal(index) || connectFour.checkVertical(index) || connectFour.checkDiagUp(index) || connectFour.checkDiagDown(index)) {
+      if (connectFour.checkHorizontal(index) || connectFour.checkVertical(index) || connectFour.checkDiagUp() || connectFour.checkDiagDown()) {
          return true;
       }
       else {
@@ -113,9 +113,9 @@ var connectFour = {
    }, // end function: checkHorizontal
 
    // function to check for vertical Connect Four based upon index of most recently added token
-   checkVertical: function(index, row) {
+   checkVertical: function(index) {
 
-      // find index of slot at bottom of column by finding index modulo 7(row length)
+      // find base value of column containing index by calculatsing index modulo 7(row length)
       var base = index%7;
 
       // loop adding 4 vertically consecutive array values, 1+1+1+1 or (-1)+(-1)+(-1)+(-1) wins
@@ -132,27 +132,71 @@ var connectFour = {
 
       // if no wins, return false
       return false;
-   },
+   }, //end function: checkVertical
 
-   checkDiagUp: function(index, row) {
+   // function to check for diagonal connect four moving up and to the right from the start token index
+   // algorithm is static and specific to a 6row x 7column grid
+   // function begins at bottom-leftmost token, scans, and increments start position right for 3 tokens until a connect four is found. it performs this on rows 0, 1, and 2
+   // algorithm is inefficient as it checks every possible location for such a connect four, everytime
+   checkDiagUp: function() {
+
+      for (var i=0; i<=14; i+=7) {
+         var checkIndex = i;
+         for (var j=0; j<=3; j++) {
+            if (Math.abs(connectFour.gameArray[checkIndex] + connectFour.gameArray[checkIndex+8] + connectFour.gameArray[checkIndex+16] + connectFour.gameArray[checkIndex+24]) === 4) {
+               return true;
+            }
+            else {
+               checkIndex += 1;
+            }
+         }
+      }
       return false;
-   },
+   }, //end function: checkDiagUp
 
-   checkDiagDown: function(index, row){
+   // function to check for diagonal connect four moving down and to the right from the start token index
+   // algorithm is static and specific to a 6row x 7column grid
+   // function begins at top-leftmost token, scans, and increments start position right for 3 tokens until a connect four is found. it performs this on rows 5, 4, and 3
+   // algorithm is inefficient as it checks every possible location for such a connect four, everytime
+   checkDiagDown: function(index) {
+
+      for (var i=35; i>=21; i-=7) {
+         var checkIndex = i;
+         for (var j=0; j<=3; j++) {
+            if (Math.abs(connectFour.gameArray[checkIndex] + connectFour.gameArray[checkIndex-6] + connectFour.gameArray[checkIndex-12] + connectFour.gameArray[checkIndex-18]) === 4) {
+               return true;
+            }
+            else {
+               checkIndex += 1;
+            }
+         }
+      }
       return false;
-   },
+   }, // end function: checkDiagDown
 
-   // function to create gameboard
-   buildBoard: function () {
+   // function to hide welcomebox div and unhide gamebox div
+   welcomeboxToGamebox: function () {
 
       // Hide Welcomebox
-      $('#welcomebox').addClass('hide');
+      $("#welcomebox").addClass('hide');
 
       // Reveal Gamebox
-      $('#gamebox').removeClass('hide');
+      $("#gamebox").removeClass('hide');
 
-      // Create gameBoard div with class and id "gameboard"
-      $("#drop_buttons").after('<div class="center-block gameboard" id="gameboard"></div>');
+   }, // end function: welcomeboxToGamebox
+
+   gameboxToWelcomebox: function () {
+
+      // hide gamebox
+      $("#gamebox").addClass('hide');
+
+      // Unhide welcomebox
+      $("#welcomebox").removeClass('hide');
+
+   }, // end function: gameboxToWelcomebox
+
+   // function to build gameboard
+   buildBoard: function () {
 
       // Populate gameBoard div with gridBoxes, 6 rows by 7 columns
       for (var i=0; i<42; i++) {
@@ -164,10 +208,10 @@ var connectFour = {
       }
 
       // round corners by adding classes to corner slots
-      $('#0').addClass('slotBottomLeft');
-      $('#6').addClass('slotBottomRight');
-      $('#35').addClass('slotTopLeft');
-      $('#41').addClass('slotTopRight');
+      $("#0").addClass('slotBottomLeft');
+      $("#6").addClass('slotBottomRight');
+      $("#35").addClass('slotTopLeft');
+      $("#41").addClass('slotTopRight');
 
       // report number wins for each players
       $("p.playerBlack").html("Black: " + connectFour.blackWins.toString());
@@ -192,20 +236,40 @@ var connectFour = {
          connectFour.addToken(index);
 
          if (connectFour.checkWin(index)) {
-            // alert winner and ask for another round
+            // increment winner's score and alert winner
             if(connectFour.playerTurn === 1) {
-               alert("Black wins!");
+               connectFour.blackWins += 1;
+               $("#welcomebox").html('<h2 style="color:black; text-align:center;"><b>Black wins!</b></h2><br>');
             }
             else {
-               alert("Red wins!");
+               connectFour.redWins += 1;
+               $("#welcomebox").html('<h2 style="color:red; text-align:center;"><b>Red wins!</b></h2><br>');
             }
+
+            // ask user to play again
+            $("#welcomebox").append('<button class="btn-lg center-block playButton">Play Again</button>');
+            connectFour.gameboxToWelcomebox();
          }
          else {
             connectFour.switchTurn();
          }
       }
-   } // end function: dropToken
+   }, // end function: dropToken
+
+   resetGame: function () {
+      $("#gameboard").empty();
+      connectFour.gameArray =
+            [  0, 0, 0, 0, 0, 0, 0,
+               0, 0, 0, 0, 0, 0, 0,
+               0, 0, 0, 0, 0, 0, 0,
+               0, 0, 0, 0, 0, 0, 0,
+               0, 0, 0, 0, 0, 0, 0,
+               0, 0, 0, 0, 0, 0, 0  ];
+      connectFour.playerTurn = 1;
+      connectFour.buildBoard();
+   }
 }
 
-$(".playbutton").click(connectFour.buildBoard);
+$(".playButton").click(function() {connectFour.welcomeboxToGamebox(); connectFour.resetGame()});
 $(".buttons").click(connectFour.dropToken);
+$(".resetButton").click(connectFour.resetGame);
