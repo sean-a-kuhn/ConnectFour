@@ -1,10 +1,5 @@
 # ConnectFour
 
 goals:
--change class ".gamePiece" to ".token"
-
-!!! "Play Again" button function not working. Figure out why and fix.
-
-
-stretch:
+-create function to handle if game ends with no wins
 -improve overall look of game and add animations

@@ -174,26 +174,51 @@ var connectFour = {
       return false;
    }, // end function: checkDiagDown
 
-   // function to hide welcomebox div and unhide gamebox div
+   // functions to switch between welcomeBox, gameBox, and replayBox by adding/removing class "hide"
+
+   // function to hide welcomeBox div and reveal gameBox div
    welcomeBoxToGameBox: function () {
 
-      // Hide Welcomebox
+      // hide welcomeBox
       $(".welcomeBox").addClass('hide');
 
-      // Reveal Gamebox
+      // unhide gameBox
       $(".gameBox").removeClass('hide');
 
    }, // end function: welcomeboxToGamebox
 
+   // function to hide replayBox and reveal gameBox
+   replayBoxToGameBox: function () {
+
+      // hide replayBox
+      $(".replayBox").addClass('hide');
+
+      // unhide gameBox
+      $(".gameBox").removeClass('hide');
+
+   }, // end function: welcomeBoxToGameBox
+
+   // function to hide gameBox and reveal welcomeBox
    gameBoxToWelcomeBox: function () {
 
-      // hide gamebox
+      // hide gameBox
       $(".gameBox").addClass('hide');
 
-      // Unhide welcomebox
+      // unhide welcomebox
       $(".welcomeBox").removeClass('hide');
 
-   }, // end function: gameboxToWelcomebox
+   }, // end function: gameBoxToWelcomebox
+
+   // function to hide gameBox and reveal replayBox
+   gameBoxToReplayBox: function () {
+
+      // hide gameBox
+      $(".gameBox").addClass('hide');
+
+      // unhide replayBox
+      $(".replayBox").removeClass('hide');
+   }, // end function: gameBoxToReplayBox
+
 
    // function to build gameboard
    buildBoard: function () {
@@ -240,16 +265,15 @@ var connectFour = {
             // increment winner's score and alert winner
             if(connectFour.playerTurn === 1) {
                connectFour.blackWins += 1;
-               $(".welcomeBox").html('<h2 style="color:black; text-align:center;"><b>Black wins!</b></h2><br>');
+               $(".replayBox p").html('<h2 style="color:black; text-align:center;"><b>Black wins!</b></h2><br>');
             }
             else {
                connectFour.redWins += 1;
-               $(".welcomeBox").html('<h2 style="color:red; text-align:center;"><b>Red wins!</b></h2><br>');
+               $(".replayBox p").html('<h2 style="color:red; text-align:center;"><b>Red wins!</b></h2><br>');
             }
 
-            // ask user to play again
-            $(".welcomeBox").append('<button class="btn-lg center-block playButton">Play Again</button>');
-            connectFour.gameBoxToWelcomeBox();
+            connectFour.gameBoxToReplayBox();
+
          }
          else {
             connectFour.switchTurn();
@@ -268,10 +292,12 @@ var connectFour = {
                0, 0, 0, 0, 0, 0, 0  ];
       connectFour.playerTurn = 1;
       connectFour.welcomeBoxToGameBox();
+      connectFour.replayBoxToGameBox();
       connectFour.buildBoard();
    }
 }
 
 $(".playButton").click(connectFour.resetGame);
+$(".replayButton").click(connectFour.resetGame);
 $(".buttons").click(connectFour.dropToken);
 $(".resetButton").click(connectFour.resetGame);

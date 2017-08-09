@@ -76,6 +76,14 @@
    flex-wrap:        wrap-reverse;
 }
 
+.welcomeBox {
+   background-color:       #0FF;
+}
+
+.replayBox {
+   background-color:       #0FF;
+}
+
 .centerme {
   position: relative;
   top: 50%;
@@ -91,18 +99,10 @@
     justify-content: center;
 }
 
-.welcomeBox {
-   background-color:       #0FF;
-}
-
 .gameBox {}
 
 .playButton {
    background-color:       #9F0;
-/*
-   width:                  200px;
-   height:                 100px;
-*/
 }
 
 .replayButton {
