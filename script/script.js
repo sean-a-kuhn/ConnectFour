@@ -219,6 +219,7 @@ var connectFour = {
       $(".replayBox").removeClass('hide');
    }, // end function: gameBoxToReplayBox
 
+
    // function to build gameboard
    buildBoard: function () {
 
@@ -272,6 +273,7 @@ var connectFour = {
             }
 
             connectFour.gameBoxToReplayBox();
+
          }
          else {
             connectFour.switchTurn();
@@ -280,7 +282,6 @@ var connectFour = {
    }, // end function: dropToken
 
    resetGame: function () {
-
       $(".gameBoard").empty();
       connectFour.gameArray =
             [  0, 0, 0, 0, 0, 0, 0,
