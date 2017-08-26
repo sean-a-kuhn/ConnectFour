@@ -219,17 +219,19 @@ var connectFour = {
       $(".replayBox").removeClass('hide');
    }, // end function: gameBoxToReplayBox
 
-
    // function to build gameboard
    buildBoard: function () {
 
       // Populate gameBoard div with gridBoxes, 6 rows by 7 columns
       for (var i=0; i<42; i++) {
+
          var addSlot = $('<div class="col-xs-1 slot"><div class="token"></div></div>');
+
          $(".gameBoard").append(addSlot);
 
       // Assign numerical id to each gridBox.
          addSlot.attr('id', i);
+
       }
 
       // round corners by adding classes to corner slots
@@ -239,6 +241,9 @@ var connectFour = {
       $("#35").addClass('slotTopLeft');
       $("#41").addClass('slotTopRight');
 
+      // call function to animate the board after construction
+      connectFour.animateBoard()
+
       // report number wins for each players
       $("p.playerBlack").html("Black: " + connectFour.blackWins.toString());
       $("p.playerRed").html("Red: " + connectFour.redWins.toString());
@@ -246,6 +251,35 @@ var connectFour = {
       // indicate player turn
       connectFour.alertTurn();
    }, // end function: buildBoard
+
+   animateBoard: function () {
+
+      for (var i=0; i<42; i++){
+         var delay = i*30;
+         window.setTimeout(connectFour.setSlotColor, delay, i);
+      }
+
+      for (var i=0; i<7; i++){
+         var delay = i*50 + 1300;
+         window.setTimeout(connectFour.setColBounce, delay, i);
+      }
+
+   },
+
+  setSlotColor: function (index) {
+      var id = "#" + index;
+      $(id).css("background-color", "rgba(255, 255, 51, 0.9)");
+      $(id).css("border", "1px solid rgba(255, 253, 0, 1.0)");
+   },
+
+   setColBounce: function (index) {
+
+      for (var i=0; i<6; i++){
+         var id = "#" + index;
+         $(id).css("animation", "bounce 100ms ease");
+         index += 7;
+      }
+   },
 
    dropToken: function (event) {
       // var column captures value "data-buttons", indicating which column user wants to drop token based on button clicked
@@ -273,7 +307,6 @@ var connectFour = {
             }
 
             connectFour.gameBoxToReplayBox();
-
          }
          else {
             connectFour.switchTurn();
@@ -282,6 +315,7 @@ var connectFour = {
    }, // end function: dropToken
 
    resetGame: function () {
+
       $(".gameBoard").empty();
       connectFour.gameArray =
             [  0, 0, 0, 0, 0, 0, 0,
