@@ -276,6 +276,7 @@ var connectFour = {
 
       if (index > connectFour.gameArray.length) {
          alert("Selected column is full, ya dingus.");
+         connectFour.enableButtons();
       }
       else {
          connectFour.updateGameArray(index);
