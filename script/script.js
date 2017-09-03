@@ -61,20 +61,19 @@ var connectFour = {
       }
    }, // end function: findIndex
 
+   // function to find row of index
+   findRow: function(index) {
+      return Math.floor(index/7);
+   },
+
+   // function to find column of index
+   findCol: function(index) {
+      return index%7;
+   },
+
    updateGameArray: function (index) {
       connectFour.gameArray[index] = connectFour.playerTurn;
    }, // end function: updateGameArray
-
-   // function to "add token" to game board by changing color of div inside slot
-   addToken: function (index) {
-      var tokenId = '#' + index + " div";
-      if (connectFour.playerTurn === 1) {
-         $(tokenId).css("background-color", "black");
-      }
-      else {
-         $(tokenId).css("background-color", "red");
-      }
-   }, //end function: addToken
 
    // function to check for a Connect Four
    checkWin: function(index) {
@@ -91,7 +90,7 @@ var connectFour = {
    checkHorizontal: function(index) {
 
       // find row of target index
-      var row = Math.floor(index/7);
+      var row = connectFour.findRow(index);
 
       // find range of check indices based on row of target index
       var startRow = 7 * row;
@@ -116,7 +115,7 @@ var connectFour = {
    checkVertical: function(index) {
 
       // find base value of column containing index by calculatsing index modulo 7(row length)
-      var base = index%7;
+      var base = connectFour.findCol(index);
 
       // loop adding 4 vertically consecutive array values, 1+1+1+1 or (-1)+(-1)+(-1)+(-1) wins
       // loop cycles 3 times because there are only 3 combinations of sets of 4 stacked tokens in 6-row board
@@ -174,50 +173,34 @@ var connectFour = {
       return false;
    }, // end function: checkDiagDown
 
-   // functions to switch between welcomeBox, gameBox, and replayBox by adding/removing class "hide"
+   // functions to hide/show welcomeBox, gameBox, and replayBox by adding/removing class "hide"
 
-   // function to hide welcomeBox div and reveal gameBox div
-   welcomeBoxToGameBox: function () {
-
+   // WelcomeBox
+   hideWelcomeBox: function () {
       // hide welcomeBox
       $(".welcomeBox").addClass('hide');
+   }, // end function: hideWelcomebox
+   // showWelcomBox not necessary since it welcomes user to page, then disappears at start of gameplay
 
+   // GameBox
+   hideGameBox: function (){
+      // hide gameBox
+      $(".gameBox").addClass('hide');
+   }, // end function: hideGameBox
+   showGameBox: function () {
       // unhide gameBox
       $(".gameBox").removeClass('hide');
+   }, // end function: showGamebox
 
-   }, // end function: welcomeboxToGamebox
-
-   // function to hide replayBox and reveal gameBox
-   replayBoxToGameBox: function () {
-
+   // ReplayBox
+   hideReplayBox: function () {
       // hide replayBox
       $(".replayBox").addClass('hide');
-
+   }, // end function: hideReplayBox
+   showReplayBox: function () {
       // unhide gameBox
-      $(".gameBox").removeClass('hide');
-
-   }, // end function: welcomeBoxToGameBox
-
-   // function to hide gameBox and reveal welcomeBox
-   gameBoxToWelcomeBox: function () {
-
-      // hide gameBox
-      $(".gameBox").addClass('hide');
-
-      // unhide welcomebox
-      $(".welcomeBox").removeClass('hide');
-
-   }, // end function: gameBoxToWelcomebox
-
-   // function to hide gameBox and reveal replayBox
-   gameBoxToReplayBox: function () {
-
-      // hide gameBox
-      $(".gameBox").addClass('hide');
-
-      // unhide replayBox
       $(".replayBox").removeClass('hide');
-   }, // end function: gameBoxToReplayBox
+   }, // end function: showReplayBox
 
    // function to build gameboard
    buildBoard: function () {
@@ -225,7 +208,7 @@ var connectFour = {
       // Populate gameBoard div with gridBoxes, 6 rows by 7 columns
       for (var i=0; i<42; i++) {
 
-         var addSlot = $('<div class="col-xs-1 slot"><div class="token"></div></div>');
+         var addSlot = $('<div class="col-xs-1 slot"></div>');
 
          $(".gameBoard").append(addSlot);
 
@@ -256,7 +239,7 @@ var connectFour = {
 
       for (var i=0; i<42; i++){
          var delay = i*30;
-         window.setTimeout(connectFour.setSlotColor, delay, i);
+         window.setTimeout(connectFour.showSlot, delay, i);
       }
 
       for (var i=0; i<7; i++){
@@ -266,10 +249,10 @@ var connectFour = {
 
    },
 
-  setSlotColor: function (index) {
+  showSlot: function (index) {
       var id = "#" + index;
-      $(id).css("background-color", "rgba(255, 255, 51, 0.9)");
       $(id).css("border", "1px solid rgba(255, 253, 0, 1.0)");
+      $(id).css("background", "radial-gradient(circle, transparent 25px, yellow 25px)");       
    },
 
    setColBounce: function (index) {
@@ -282,6 +265,9 @@ var connectFour = {
    },
 
    dropToken: function (event) {
+
+      connectFour.disableButtons();
+
       // var column captures value "data-buttons", indicating which column user wants to drop token based on button clicked
       var column = parseInt(event.target.dataset.button);
 
@@ -293,26 +279,78 @@ var connectFour = {
       }
       else {
          connectFour.updateGameArray(index);
-         connectFour.addToken(index);
+         connectFour.animateToken(index);
 
-         if (connectFour.checkWin(index)) {
-            // increment winner's score and alert winner
-            if(connectFour.playerTurn === 1) {
-               connectFour.blackWins += 1;
-               $(".replayBox p").html('<h2 style="color:black; text-align:center;"><b>Black wins!</b></h2><br>');
-            }
-            else {
-               connectFour.redWins += 1;
-               $(".replayBox p").html('<h2 style="color:red; text-align:center;"><b>Red wins!</b></h2><br>');
-            }
-
-            connectFour.gameBoxToReplayBox();
+         if (connectFour.checkWin(index)) {         
+            window.setTimeout(connectFour.triggerWin, 400);
          }
          else {
             connectFour.switchTurn();
+            connectFour.enableButtons();
          }
       }
    }, // end function: dropToken
+
+   triggerWin: function () {
+
+      // increment winner's score and alert winner
+      if(connectFour.playerTurn === 1) {
+         connectFour.blackWins += 1;
+         $(".replayBox p").html('<h2 style="color:black; text-align:center;"><b>Black wins!</b></h2><br>');
+      }
+      else {
+         connectFour.redWins += 1;
+         $(".replayBox p").html('<h2 style="color:red; text-align:center;"><b>Red wins!</b></h2><br>');
+      }
+
+      connectFour.showReplayBox();
+   },
+
+   animateToken: function (index) {
+      var id = '#' + index;
+      $(id).html('<div class="token"></div>');
+      var tokenId = id + " .token";
+      
+      var row = connectFour.findRow(index);
+      switch (row) {
+         case 0: $(tokenId).css("marginBottom", "+850px"); break;
+         case 1: $(tokenId).css("marginBottom", "+710px"); break;
+         case 2: $(tokenId).css("marginBottom", "+570px"); break;
+         case 3: $(tokenId).css("marginBottom", "+430px"); break;
+         case 4: $(tokenId).css("marginBottom", "+290px"); break;
+         default: $(tokenId).css("marginBottom", "+150px");
+      }
+
+      connectFour.colorToken(index);
+
+      switch (row) {
+            case 0: $(tokenId).animate({marginBottom: '0'}, 350); break;
+            case 1: $(tokenId).animate({marginBottom: '0'}, 300); break;
+            case 2: $(tokenId).animate({marginBottom: '0'}, 250); break;
+            case 3: $(tokenId).animate({marginBottom: '0'}, 200); break;
+            case 4: $(tokenId).animate({marginBottom: '0'}, 150); break;
+            default: $(tokenId).animate({marginBottom: '0'}, 100);
+         }
+   },
+
+   // function to "add token" to game board by changing color of div inside slot
+   colorToken: function (index) {
+      var tokenId = '#' + index + " .token";
+      if (connectFour.playerTurn === 1) {
+         $(tokenId).css("background-color", "black");
+      }
+      else {
+         $(tokenId).css("background-color", "red");
+      }
+   }, //end function: colorToken
+
+   disableButtons: function() {
+      $(".buttons").prop("disabled", true);
+   },
+
+   enableButtons: function() {
+      $(".buttons").prop("disabled", false);
+   },
 
    resetGame: function () {
 
@@ -325,9 +363,11 @@ var connectFour = {
                0, 0, 0, 0, 0, 0, 0,
                0, 0, 0, 0, 0, 0, 0  ];
       connectFour.playerTurn = 1;
-      connectFour.welcomeBoxToGameBox();
-      connectFour.replayBoxToGameBox();
+      connectFour.hideWelcomeBox();
+      connectFour.hideReplayBox();
+      connectFour.showGameBox();
       connectFour.buildBoard();
+      connectFour.enableButtons();
    }
 };
 
