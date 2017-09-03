@@ -33,13 +33,9 @@
             <br>
             <button class="btn-lg center-block playButton">OMG, I dunno. <b>Okay!!!</b></button>
          </div>
-         <div class="jumbotron replayBox hide">
-            <p></p>
-            <button class="btn-lg center-block replayButton">Play Again</button>
-         </div>
       </div>
 
-      <div class="container hide gameBox">
+      <div class="container gameBox hide">
 
          <div class="row">
             <div class="col-md-6 gameDisplay">
@@ -94,9 +90,15 @@
                 <button class="buttons" data-button="6">Drop</button>
             </div>
          </div>
-
-         <div class="center-block gameBoard"></div>
-
+        <div class="row">
+            <div class="gameGrid">
+                <div class="replayBox hide">
+                   <p></p>
+                   <button class="btn-lg center-block replayButton">Play Again</button>
+                </div>
+                <div class="gameBoard"></div>
+            </div>
+        </div>
          <!-- space to separate bottom of gameboard from page bottom -->
          <br>
          <br>
